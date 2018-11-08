@@ -21,7 +21,14 @@ bool 	is_piece (struct ChessPiece pc, enum PieceColor color, enum PieceType type
 
 void 	init_chess_board (ChessBoard chess_board)
 {
-
+  for (size_t i = 0; i < 8; i++)
+  {
+    for (size_t j = 0; j < 8; j++)
+    {
+      chess_board[i][j].is_occupied = false;
+      chess_board[i][j].piece.type = NoPiece;  
+    }
+  }
 }
 
 struct ChessSquare * 	get_square (ChessBoard chess_board, File file, Rank rank)
