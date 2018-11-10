@@ -21,17 +21,30 @@ bool 	is_piece (struct ChessPiece pc, enum PieceColor color, enum PieceType type
 
 void 	init_chess_board (ChessBoard chess_board)
 {
-
+  for (size_t i = 0; i < 8; i++)
+  {
+    for (size_t j = 0; j < 8; j++)
+    {
+      chess_board[i][j].is_occupied = false;
+      chess_board[i][j].piece.type = NoPiece;
+    }
+  }
 }
 
 struct ChessSquare * 	get_square (ChessBoard chess_board, File file, Rank rank)
 {
+  if(file > 'h' || file < 'a' || rank > 8 || rank < 1)
+{
   return 0;
+}
+return &chess_board[rank-1][file-'a'];
+
 }
 
 bool 	is_square_occupied (ChessBoard chess_board, File file, Rank rank)
 {
-  return false;
+  struct ChessSquare* currentSquare=get_square(chess_board,file,rank);
+  return currentSquare->is_occupied;
 }
 
 bool 	add_piece (ChessBoard chess_board, File file, Rank rank, struct ChessPiece piece)
