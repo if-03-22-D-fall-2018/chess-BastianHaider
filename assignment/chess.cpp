@@ -26,7 +26,11 @@ void 	init_chess_board (ChessBoard chess_board)
     for (size_t j = 0; j < 8; j++)
     {
       chess_board[i][j].is_occupied = false;
+<<<<<<< HEAD
       chess_board[i][j].piece.type = NoPiece;
+=======
+      chess_board[i][j].piece.type = NoPiece;  
+>>>>>>> ca888fc242f629a312ac0633441d9cc67d15c086
     }
   }
 }
