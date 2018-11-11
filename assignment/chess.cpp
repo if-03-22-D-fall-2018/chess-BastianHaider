@@ -11,6 +11,7 @@
  * ----------------------------------------------------------
  */
 #include <stdlib.h>
+#include <math.h>
 #include "general.h"
 #include "chess.h"
 
@@ -46,7 +47,7 @@ struct ChessSquare * 	get_square (ChessBoard chess_board, File file, Rank rank)
 
 bool 	is_square_occupied (ChessBoard chess_board, File file, Rank rank)
 {
-  struct ChessSquare* currentSquare=get_square(chess_board,file,rank);
+  struct ChessSquare* currentSquare = get_square(chess_board,file,rank);
   return currentSquare->is_occupied;
 }
 
@@ -58,10 +59,10 @@ bool 	add_piece (ChessBoard chess_board, File file, Rank rank, struct ChessPiece
   chess_board[rank-1][file-'a'].is_occupied=true;
   return true;
 }
-return false;
+  return false;
 }
 
-struct ChessPiece 	get_piece (ChessBoard chess_board, File file, Rank rank)
+struct ChessPiece	get_piece (ChessBoard chess_board, File file, Rank rank)
 {
   return get_square(chess_board,file,rank)->piece;
 }
@@ -93,7 +94,7 @@ void 	setup_chess_board (ChessBoard chess_board)
 
 bool 	remove_piece (ChessBoard chess_board, File file, Rank rank)
 {
-  if (is_square_occupied(chess_board,file,rank)))
+  if (is_square_occupied(chess_board,file,rank))
    {
      chess_board[rank-1][file-'a'].is_occupied = false;
      chess_board[rank-1][file-'a'].piece.type = NoPiece;
@@ -103,20 +104,32 @@ bool 	remove_piece (ChessBoard chess_board, File file, Rank rank)
 }
 
 
-bool 	squares_share_file (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_file (File file1, Rank rank1, File file2, Rank rank2)
 {
+  if (are_coordinates_ok(file1,rank1,file2,rank2))
+ {
+   return file1==file2;
+ }
   return false;
 }
 
 
-bool 	squares_share_rank (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_rank (File file1, Rank rank1, File file2, Rank rank2)
 {
+  if (are_coordinates_ok(file1,rank1,file2,rank2))
+{
+  return rank1==rank2;
+}
   return false;
 }
 
 
-bool 	squares_share_diagonal (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_diagonal (File file1, Rank rank1, File file2, Rank rank2)
 {
+  if (are_coordinates_ok(file1,rank1,file2,rank2))
+{
+  return fabs((double)file1-file2)==fabs((double)rank1-rank2);
+}
   return false;
 }
 
@@ -126,19 +139,62 @@ bool 	squares_share_knights_move (File file1, Rank rank1, File file2, Rank rank2
   return ((rank1 - 2 == rank2 || rank1 + 2 == rank2) && (file1 - 1 - 'a' == file2 - 'a' || file1 + 1 - 'a' == file2 - 'a')) || ((rank1 - 1 == rank2 || rank1 + 1 == rank2) && (file1 - 2 - 'a' == file2 - 'a' || file1 + 2 - 'a' == file2 - 'a'));
 }
 
-bool 	squares_share_pawns_move (enum PieceColor color, enum MoveType move, File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_pawns_move (enum PieceColor color, enum MoveType move,  File file1, Rank rank1, File file2, Rank rank2)
 {
-  return false;
+  if (color==White)
+ {
+   if (rank1>1)
+   {
+     if (move==NormalMove)
+     {
+       if (rank1==2)
+       {
+         return file1==file2&&(rank1+1==rank2 || rank1+2==rank2);
+       }
+       else
+       {
+         return file1== file2&& rank1+1==rank2;
+       }
+     }
+     else
+     {
+         return  rank1+1==rank2 && (file1+1==file2 || file1-1==file2);
+     }
+   }
+ }
+ else
+ {
+   if (rank1<8)
+   {
+     if (move==NormalMove)
+     {
+       if (rank1==7)
+       {
+         return file1==file2&& (rank1-1==rank2 || rank1-2==rank2) ;
+       }
+       else
+       {
+         return file1==file2&& rank1-1==rank2;
+       }
+     }
+     else
+     {
+         return  rank1-1==rank2 && (file1+1==file2 || file1-1==file2);
+     }
+   }
+ }
+ return false;
 }
 
 
-bool 	squares_share_queens_move (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_queens_move (File file1, Rank rank1, File file2, Rank rank2)
 {
-  return false;
+
+  return squares_share_diagonal(file1,rank1,file2,rank2)||squares_share_file(file1,rank1,file2,rank2)||squares_share_rank(file1,rank1,file2,rank2);
 }
 
 
-bool 	squares_share_kings_move (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_kings_move (File file1, Rank rank1, File file2, Rank rank2)
 {
   bool move_up= rank1+1==rank2 && file1==file2;
   bool move_down= rank1-1==rank2 && file1==file2;
