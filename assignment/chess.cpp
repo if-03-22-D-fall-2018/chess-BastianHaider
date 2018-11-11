@@ -14,6 +14,10 @@
 #include "general.h"
 #include "chess.h"
 
+bool are_coordinates_ok(File file1, Rank rank1, File file2, Rank rank2)
+{
+   return file1 <= 'h' && file1 >= 'a' && rank1 <= 8 && rank1 >= 1&&file2 <= 'h' && file2 >= 'a' && rank2 <= 8 && rank2 >= 1;
+}
 bool 	is_piece (struct ChessPiece pc, enum PieceColor color, enum PieceType type)
 {
   return pc.color == color && pc.type == type;
@@ -89,7 +93,13 @@ void 	setup_chess_board (ChessBoard chess_board)
 
 bool 	remove_piece (ChessBoard chess_board, File file, Rank rank)
 {
-  return false;
+  if (is_square_occupied(chess_board,file,rank)))
+   {
+     chess_board[rank-1][file-'a'].is_occupied = false;
+     chess_board[rank-1][file-'a'].piece.type = NoPiece;
+     return true;
+   }
+   return false;
 }
 
 
@@ -111,11 +121,10 @@ bool 	squares_share_diagonal (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
 }
 
 
-bool 	squares_share_knights_move (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
+bool 	squares_share_knights_move (File file1, Rank rank1, File file2, Rank rank2)
 {
-  return false;
+  return ((rank1 - 2 == rank2 || rank1 + 2 == rank2) && (file1 - 1 - 'a' == file2 - 'a' || file1 + 1 - 'a' == file2 - 'a')) || ((rank1 - 1 == rank2 || rank1 + 1 == rank2) && (file1 - 2 - 'a' == file2 - 'a' || file1 + 2 - 'a' == file2 - 'a'));
 }
-
 
 bool 	squares_share_pawns_move (enum PieceColor color, enum MoveType move, File s1_f, Rank s1_r, File s2_f, Rank s2_r)
 {
@@ -131,5 +140,13 @@ bool 	squares_share_queens_move (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
 
 bool 	squares_share_kings_move (File s1_f, Rank s1_r, File s2_f, Rank s2_r)
 {
-  return false;
+  bool move_up= rank1+1==rank2 && file1==file2;
+  bool move_down= rank1-1==rank2 && file1==file2;
+  bool move_right= rank1==rank2 && file1+1==file2;
+  bool move_left= rank1==rank2 && file1-1==file2;
+  bool move_right_up= rank1+1==rank2 && file1+1==file2;
+  bool move_right_down= rank1-1==rank2 && file1+1==file2;
+  bool move_left_up= rank1+1==rank2 && file1-1==file2;
+  bool move_left_down= rank1-1==rank2 && file1-1==file2;
+  return move_up || move_down || move_left || move_right || move_left_up || move_right_up || move_left_down || move_right_down;
 }
