@@ -26,11 +26,7 @@ void 	init_chess_board (ChessBoard chess_board)
     for (size_t j = 0; j < 8; j++)
     {
       chess_board[i][j].is_occupied = false;
-<<<<<<< HEAD
       chess_board[i][j].piece.type = NoPiece;
-=======
-      chess_board[i][j].piece.type = NoPiece;  
->>>>>>> ca888fc242f629a312ac0633441d9cc67d15c086
     }
   }
 }
@@ -41,8 +37,7 @@ struct ChessSquare * 	get_square (ChessBoard chess_board, File file, Rank rank)
 {
   return 0;
 }
-return &chess_board[rank-1][file-'a'];
-
+  return &chess_board[rank-1][file-'a'];
 }
 
 bool 	is_square_occupied (ChessBoard chess_board, File file, Rank rank)
@@ -53,18 +48,43 @@ bool 	is_square_occupied (ChessBoard chess_board, File file, Rank rank)
 
 bool 	add_piece (ChessBoard chess_board, File file, Rank rank, struct ChessPiece piece)
 {
-  return false;
+  if (!is_square_occupied(chess_board,file,rank)&& file <= 'h' && file >= 'a' && rank <= 8 && rank >= 1)
+{
+  chess_board[rank-1][file-'a'].piece=piece;
+  chess_board[rank-1][file-'a'].is_occupied=true;
+  return true;
+}
+return false;
 }
 
 struct ChessPiece 	get_piece (ChessBoard chess_board, File file, Rank rank)
 {
-  struct ChessPiece return_value;
-  return return_value;
+  return get_square(chess_board,file,rank)->piece;
 }
 
 void 	setup_chess_board (ChessBoard chess_board)
 {
-
+  for (char i = 'a'; i <= 'h'; i++)
+   {
+     add_piece(chess_board, i, 2, {White, Pawn});
+     add_piece(chess_board, i, 7, {Black, Pawn});
+  }
+  add_piece(chess_board, 'a', 1, {White, Rook});
+  add_piece(chess_board, 'h', 1, {White, Rook});
+  add_piece(chess_board, 'b', 1, {White, Knight});
+  add_piece(chess_board, 'g', 1, {White, Knight});
+  add_piece(chess_board, 'c', 1, {White, Bishop});
+ 	add_piece(chess_board, 'f', 1, {White, Bishop});
+ 	add_piece(chess_board, 'd', 1, {White, Queen});
+ 	add_piece(chess_board, 'e', 1, {White, King});
+ 	add_piece(chess_board, 'a', 8, {Black, Rook});
+ 	add_piece(chess_board, 'h', 8, {Black, Rook});
+ 	add_piece(chess_board, 'b', 8, {Black, Knight});
+  add_piece(chess_board, 'g', 8, {Black, Knight});
+  add_piece(chess_board, 'c', 8, {Black, Bishop});
+ 	add_piece(chess_board, 'f', 8, {Black, Bishop});
+ 	add_piece(chess_board, 'd', 8, {Black, Queen});
+ 	add_piece(chess_board, 'e', 8, {Black, King});
 }
 
 bool 	remove_piece (ChessBoard chess_board, File file, Rank rank)
